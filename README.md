@@ -12,32 +12,36 @@ This project implements a data pipeline that:
 
 ## Project Structure
 
+```
 greenometer-data-pipeline/
 │
 ├── greenometer_data_pipeline/
-│   └── src/
-│       ├── main.py
-│       ├── airflow/
-│       │   └── dags/
-│       │       └── data_processing_dag.py
-│       ├── api/
-│       │   ├── main.py
-│       │   ├── app.py
-│       │   └── models.py
-│       ├── common/
-│       │   ├── init.py
-│       │   ├── airflow_client.py
-│       │   ├── config.py
-│       │   └── data_transformer.py
-│       ├── data/               # Directory for input data
-│       └── output/             # Directory for output files
-├── tests/
-├── docker-compose.yml
-├── Dockerfile.api
-├── Dockerfile.airflow
-├── pyproject.toml
+│   ├── api/                    # FastAPI app (entrypoint, routes, models)
+│   │   ├── app.py
+│   │   ├── main.py
+│   │   └── models.py
+│   │
+│   ├── airflow/                # Airflow DAG definitions
+│   │   └── dags/
+│   │       └── data_processing_dag.py
+│   │
+│   ├── common/                 # Shared logic
+│   │   ├── __init__.py
+│   │   ├── airflow_client.py   # DAG trigger helper
+│   │   ├── config.py
+│   │   └── data_transformer.py
+│   │
+│   ├── data/                   # Directory for incoming JSON files
+│   └── output/                 # Directory for generated Excel and PDF files
+│
+├── tests/                     # Unit and integration tests
+│
+├── docker-compose.yml        # Compose file for local development
+├── Dockerfile.api            # Dockerfile for FastAPI service
+├── Dockerfile.airflow        # Dockerfile for Airflow service
+├── pyproject.toml            # Poetry configuration
 └── README.md
-
+```
 
 ## Technologies
 

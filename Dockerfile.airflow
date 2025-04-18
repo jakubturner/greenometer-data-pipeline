@@ -1,0 +1,30 @@
+FROM apache/airflow:2.8.1-python3.11
+
+USER root
+
+# Install system dependencies
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+    build-essential \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
+
+# Create directories for data and output
+RUN mkdir -p /app/greenometer_data_pipeline/src/data \
+    /app/greenometer_data_pipeline/src/output \
+    && chown -R airflow:root /app
+
+USER airflow
+
+# Install Python dependencies
+COPY --chown=airflow:root pyproject.toml poetry.lock* /app/
+WORKDIR /app
+
+# Install additional Python packages needed for the pipeline
+RUN pip install pandas openpyxl fpdf
+
+# Copy the application code
+COPY --chown=airflow:root . /app/
+
+# Add greenometer_data_pipeline to PYTHONPATH
+ENV PYTHONPATH=/app

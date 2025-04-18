@@ -1,0 +1,32 @@
+FROM python:3.12-slim
+
+WORKDIR /app
+
+# Install poetry
+RUN pip install poetry==1.8.2
+
+# Copy pyproject.toml and lock file
+COPY pyproject.toml poetry.lock* ./
+
+# Configure poetry
+RUN poetry config virtualenvs.create false
+
+# Install dependencies
+RUN poetry install --only main --no-interaction
+
+# Copy the application code
+COPY . .
+
+# Create directories for data and output
+RUN mkdir -p /app/greenometer_data_pipeline/src/data \
+    /app/greenometer_data_pipeline/src/output
+
+# Set environment variables
+ENV PYTHONPATH=/app
+ENV DATA_DIR=/app/greenometer_data_pipeline/src/data
+ENV OUTPUT_DIR=/app/greenometer_data_pipeline/src/output
+
+# Expose the port
+EXPOSE 8000
+
+CMD ["python", "-m", "greenometer_data_pipeline.src.api.__main__"]
